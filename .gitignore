@@ -1,0 +1,108 @@
+############################################
+# Python / Django
+############################################
+
+# Virtual environment
+venv/
+ENV/
+.env
+.env.*
+backend/venv/
+
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Django files
+*.log
+local_settings.py
+
+# Database
+db.sqlite3
+
+# Django static files (collected)
+staticfiles/
+
+############################################
+# Node / React / Vite
+############################################
+
+# Node dependencies
+node_modules/
+
+# Vite / React build output
+dist/
+build/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+############################################
+# OS / Editor
+############################################
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Editor configs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+############################################
+# Tests / coverage
+############################################
+
+.coverage
+htmlcov/
+.pytest_cache/
+
+############################################
+# Redis / Celery (if added later)
+############################################
+
+*.pid
+celerybeat-schedule
+celerybeat.pid
+
+############################################
+# Misc
+############################################
+
+# Backup files
+*.bak
+*.tmp
+*~
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+/venv
