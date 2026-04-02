@@ -1,43 +1,26 @@
 from rest_framework import viewsets, views, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated
+from users.permissions import IsApproverOrAdmin
 from .models import Leave, LeaveBalance
 from .serializers import LeaveSerializer, LeaveBalanceSerializer
 
-
-def get_default_user():
-    from users.models import User
-    user = User.objects.first()
-    if user is None:
-        user = User.objects.create_user(
-            username='testuser',
-            password='testpass',
-            first_name='Test',
-            last_name='User',
-            role=User.Roles.MAKER,
-        )
-    return user
-
 class LeaveViewSet(viewsets.ModelViewSet):
     serializer_class = LeaveSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
-        if not user.is_authenticated:
-            return Leave.objects.all()
-
         from users.models import User
         if user.role in [User.Roles.APPROVER, User.Roles.ADMIN]:
             return Leave.objects.all()
         return Leave.objects.filter(user=user)
 
     def perform_create(self, serializer):
-        user = self.request.user if self.request.user.is_authenticated else get_default_user()
-        serializer.save(user=user, status=Leave.Status.PENDING)
+        serializer.save(user=self.request.user, status=Leave.Status.PENDING)
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['post'], permission_classes=[IsApproverOrAdmin])
     def set_status(self, request, pk=None):
         leave = self.get_object()
         status_value = request.data.get('status')
@@ -61,7 +44,6 @@ class LeaveCalendarView(views.APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        # Fetch approved team leaves to populate the Team Calendar UI
         leaves = Leave.objects.filter(status=Leave.Status.APPROVED)
         serializer = LeaveSerializer(leaves, many=True)
         return Response(serializer.data)

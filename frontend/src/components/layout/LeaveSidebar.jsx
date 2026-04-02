@@ -1,7 +1,12 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 
 const LeaveSidebar = () => {
+  const { role } = useAuth();
+  const canApply = role === 'maker' || role === 'admin';
+  const canApprove = role === 'approver' || role === 'admin';
+
   return (
     <nav className="sidebar">
       <div className="sb-section">
@@ -16,24 +21,28 @@ const LeaveSidebar = () => {
 
       <div className="sb-section">
         <div className="sb-hd">Leave Management</div>
-        <NavLink to="/leave/apply" className={({ isActive }) => `sb-item ${isActive ? 'on' : ''}`}>
-          <span className="sb-ico">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 5v14M5 12h14"/></svg>
-          </span>
-          Apply for Leave
-        </NavLink>
+        {canApply && (
+          <NavLink to="/leave/apply" className={({ isActive }) => `sb-item ${isActive ? 'on' : ''}`}>
+            <span className="sb-ico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 5v14M5 12h14"/></svg>
+            </span>
+            Apply for Leave
+          </NavLink>
+        )}
         <NavLink to="/leave/my-applications" className={({ isActive }) => `sb-item ${isActive ? 'on' : ''}`}>
           <span className="sb-ico">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
           </span>
           My Applications
         </NavLink>
-        <NavLink to="/leave/pending" className={({ isActive }) => `sb-item ${isActive ? 'on' : ''}`}>
-          <span className="sb-ico">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-          </span>
-          Pending Approval
-        </NavLink>
+        {canApprove && (
+          <NavLink to="/leave/pending" className={({ isActive }) => `sb-item ${isActive ? 'on' : ''}`}>
+            <span className="sb-ico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            </span>
+            Pending Approval
+          </NavLink>
+        )}
       </div>
 
       <div className="sb-section">

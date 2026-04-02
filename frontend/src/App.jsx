@@ -5,6 +5,8 @@ import Dashboard from './pages/memo/Dashboard';
 import MemoList from './pages/memo/MemoList';
 import MemoDetail from './pages/memo/MemoDetail';
 import NewMemo from './pages/memo/NewMemo';
+import Login from './pages/Login';
+import RequireAuth from './components/common/RequireAuth';
 
 // Leave Pages
 import LeaveDashboard from './pages/leave/Dashboard';
@@ -17,7 +19,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Layout />}>
+        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<RequireAuth><Layout /></RequireAuth>}>
           <Route index element={<Navigate to="/memos" replace />} />
           <Route path="memos" element={<Dashboard />} />
           <Route path="memos/all" element={<MemoList />} />

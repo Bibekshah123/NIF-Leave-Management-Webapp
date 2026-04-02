@@ -5,8 +5,25 @@ import { useMemos } from '../../hooks/useMemos';
 
 const NewMemo = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, role } = useAuth();
   const { createMemo, loading } = useMemos();
+
+  if (role !== 'maker' && role !== 'admin') {
+    return (
+      <div className="page">
+        <div className="pg-head">
+          <div>
+            <div className="pg-title">Access Denied</div>
+            <div className="pg-desc">Only makers may draft new memos.</div>
+          </div>
+        </div>
+        <div className="empty-state">
+          <div className="empty-icon">!</div>
+          <div className="empty-msg">You do not have permission to create memos.</div>
+        </div>
+      </div>
+    );
+  }
 
   const [formData, setFormData] = useState({
     from: `${user.name}, ${user.title}`,

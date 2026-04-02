@@ -1,10 +1,29 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLeaves } from '../../hooks/useLeaves';
+import { useAuth } from '../../hooks/useAuth';
 
 const ApplyLeave = () => {
   const navigate = useNavigate();
   const { applyLeave, loading } = useLeaves();
+  const { role } = useAuth();
+
+  if (role !== 'maker' && role !== 'admin') {
+    return (
+      <div className="page">
+        <div className="pg-head">
+          <div>
+            <div className="pg-title">Access Denied</div>
+            <div className="pg-desc">Only makers may apply for leave.</div>
+          </div>
+        </div>
+        <div className="empty-state">
+          <div className="empty-icon">!</div>
+          <div className="empty-msg">You do not have permission to submit leave applications.</div>
+        </div>
+      </div>
+    );
+  }
 
   const [formData, setFormData] = useState({
     type: 'Annual Leave',

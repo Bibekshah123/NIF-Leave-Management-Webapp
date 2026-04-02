@@ -1,18 +1,34 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useLeaves } from '../../hooks/useLeaves';
 import { useAuth } from '../../hooks/useAuth';
 import Badge from '../../components/common/Badge';
 
 const PendingApprovals = () => {
   const { leaves, loading, fetchLeaves, updateLeaveStatus } = useLeaves();
-  const { user } = useAuth();
-  
+  const { role } = useAuth();
+
   useEffect(() => {
     fetchLeaves();
   }, [fetchLeaves]);
 
-  // Mock matching manager by checking if the user's name is in the leave.manager string
-  const pendingLeaves = leaves.filter(l => l.status === 'pending' && l.manager.includes(user.name));
+  if (role !== 'approver' && role !== 'admin') {
+    return (
+      <div className="page">
+        <div className="pg-head">
+          <div>
+            <div className="pg-title">Access Denied</div>
+            <div className="pg-desc">Only approvers may review pending leave approvals.</div>
+          </div>
+        </div>
+        <div className="empty-state">
+          <div className="empty-icon">!</div>
+          <div className="empty-msg">You do not have permission to view this page.</div>
+        </div>
+      </div>
+    );
+  }
+
+  const pendingLeaves = leaves.filter(l => l.status === 'pending');
 
   const handleAction = async (id, status) => {
     try {

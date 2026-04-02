@@ -1,111 +1,129 @@
 import api from './api';
 
-// Initial Mock Data to support development without backend
-let memos = [
-  {
-    id: 'NIF/MEMO/2081/001',
-    subject: 'Approval for Open Source IXP Software Development — APNIC Collaboration',
-    from: 'Ram Bahadur Khatri, Programme Director',
-    to: 'Dr. Hari Prasad Shrestha, Executive Director',
-    date: '2025-01-10',
-    dept: 'Programs',
-    priority: 'Normal',
-    bg: 'NIF has been in discussions with APNIC Foundation since Q3 2024 regarding a collaborative open-source project to develop IXP management software.',
-    purpose: 'To seek Executive Director approval for entering into a formal MoU with APNIC Foundation.',
-    body: 'APNIC contributes USD 80,000 and two senior engineers. All code released under Apache License 2.0.',
-    action: 'Please approve the proposed collaboration.',
-    checker: 'Sita Koirala — Programme Manager',
-    approver: 'Dr. Hari Prasad Shrestha — Executive Director',
-    notes: 'Critical for NIF 2025 open-source strategy.',
-    status: 'approved',
-    timeline: [
-      { t: 'c', text: 'Memo drafted', by: 'Ram Bahadur Khatri (Maker)', date: '2025-01-08' },
-      { t: 's', text: 'Submitted for review', by: 'Ram Bahadur Khatri (Maker)', date: '2025-01-10' },
-      { t: 'ch', text: 'Reviewed and forwarded', by: 'Sita Koirala (Checker)', date: '2025-01-12' },
-      { t: 'ok', text: 'Approved', by: 'Dr. Hari Prasad Shrestha (Approver)', date: '2025-01-14' }
-    ]
-  },
-  {
-    id: 'NIF/MEMO/2081/002',
-    subject: 'Digital Transformation Roadmap FY 2081–82 — Budget Approval',
-    from: 'Ram Bahadur Khatri, Programme Director',
-    to: 'Dr. Hari Prasad Shrestha, Executive Director',
-    date: '2025-01-22',
-    dept: 'Programs',
-    priority: 'Urgent',
-    bg: 'NIF has initiated a comprehensive digital transformation exercise.',
-    purpose: 'Budget approval of NPR 18,00,000 for technology infrastructure.',
-    body: 'Four pillars: Document digitalisation, Open data portal, Staff training, Website redesign.',
-    action: 'Review and approve roadmap.',
-    checker: 'Sita Koirala — Programme Manager',
-    approver: 'Dr. Hari Prasad Shrestha — Executive Director',
-    notes: 'Finance committee pre-reviewed.',
-    status: 'checking',
-    timeline: [
-      { t: 'c', text: 'Memo drafted', by: 'Ram Bahadur Khatri (Maker)', date: '2025-01-20' },
-      { t: 's', text: 'Submitted', by: 'Ram Bahadur Khatri (Maker)', date: '2025-01-22' }
-    ]
-  }
-];
+const statusActionCode = {
+  draft: 'c',
+  submitted: 's',
+  checked: 'ch',
+  approved: 'ok',
+  rejected: 'r',
+  returned: 'r',
+};
+
+const actionLabel = {
+  draft: 'Drafted',
+  submitted: 'Submitted',
+  checked: 'Reviewed and forwarded',
+  approved: 'Approved',
+  rejected: 'Rejected',
+  returned: 'Returned',
+};
+
+const normalizeTimelineItem = (log) => ({
+  t: statusActionCode[log.action] || 's',
+  text: actionLabel[log.action] || log.action,
+  by: log.performed_by_name || 'System',
+  date: log.timestamp ? log.timestamp.split('T')[0] : '',
+  note: log.remarks,
+});
+
+const normalizeMemo = (memo) => ({
+  id: memo.ref_no || memo.id,
+  ref_no: memo.ref_no || memo.id,
+  subject: memo.subject || '',
+  bg: memo.background || '',
+  purpose: memo.purpose || '',
+  body: memo.details || '',
+  action: memo.action_expected || '',
+  status: memo.status || 'draft',
+  dept: memo.department || 'General',
+  priority: memo.priority ? memo.priority.charAt(0).toUpperCase() + memo.priority.slice(1) : 'Normal',
+  date: memo.created_at ? memo.created_at.split('T')[0] : '',
+  from: memo.maker_name ? `${memo.maker_name}, Maker` : 'Maker',
+  checker: memo.checker_name ? `${memo.checker_name} — Checker` : 'Checker',
+  approver: memo.approver_name ? `${memo.approver_name} — Approver` : 'Approver',
+  to: memo.approver_name ? `To: ${memo.approver_name}` : 'To: Executive Director',
+  timeline: Array.isArray(memo.workflow_logs) ? memo.workflow_logs.map(normalizeTimelineItem) : [],
+});
+
+const toBackendMemo = (data) => ({
+  subject: data.subject,
+  background: data.author ? `Author: ${data.author}` : 'Draft memo created by app.',
+  purpose: data.assignee ? `Assigned to: ${data.assignee}` : 'No assignee provided.',
+  details: data.body,
+  action_expected: data.action || '',
+  department: 'General',
+  priority: 'normal',
+  status: data.status || 'draft',
+});
+
+const normalizeMemoList = (memos) => memos.map(normalizeMemo);
 
 export const memoService = {
-  // Get all memos
   getAll: async () => {
-    // In real app: return await api.get('/memos');
-    return Promise.resolve({ data: memos });
+    const response = await api.get('/memos/');
+    return { data: normalizeMemoList(response.data) };
   },
 
-  // Get single memo
   getById: async (id) => {
-    // In real app: return await api.get(`/memos/${encodeURIComponent(id)}`);
-    const memo = memos.find(m => m.id === id);
-    if (!memo) return Promise.reject(new Error('Memo not found'));
-    return Promise.resolve({ data: memo });
+    const response = await api.get(`/memos/${encodeURIComponent(id)}/`);
+    return { data: normalizeMemo(response.data) };
   },
 
-  // Create new memo
   create: async (data) => {
-    // In real app: return await api.post('/memos', data);
-    const newMemo = {
-      ...data,
-      id: `NIF/MEMO/2081/00${memos.length + 1}`,
-      date: new Date().toISOString().split('T')[0],
-      status: data.isDraft ? 'draft' : 'submitted',
-      timeline: [
-        { t: 'c', text: 'Memo drafted', by: data.from, date: new Date().toISOString().split('T')[0] }
-      ]
-    };
-    if (!data.isDraft) {
-      newMemo.timeline.push({ t: 's', text: 'Submitted for review', by: data.from, date: new Date().toISOString().split('T')[0] });
+    const payload = toBackendMemo(data);
+    const response = await api.post('/memos/', payload);
+    let memo = normalizeMemo(response.data);
+
+    if (data.status === 'submitted') {
+      await api.post(`/memos/${encodeURIComponent(memo.id)}/submit/`, { remarks: '' });
+      const updated = await api.get(`/memos/${encodeURIComponent(memo.id)}/`);
+      memo = normalizeMemo(updated.data);
     }
-    memos.unshift(newMemo);
-    return Promise.resolve({ data: newMemo });
+
+    return { data: memo };
   },
 
-  // Update memo status
   updateStatus: async (id, action, note, user) => {
-    // In real app: return await api.patch(`/memos/${encodeURIComponent(id)}/status`, { action, note });
-    const memoIndex = memos.findIndex(m => m.id === id);
-    if (memoIndex === -1) return Promise.reject(new Error('Memo not found'));
-    
-    const memo = { ...memos[memoIndex] };
-    const date = new Date().toISOString().split('T')[0];
-    
-    if (action === 'submit') {
-      memo.status = 'submitted';
-      memo.timeline.push({ t: 's', text: 'Submitted for review', by: user, date, note });
-    } else if (action === 'check') {
-      memo.status = 'checking';
-      memo.timeline.push({ t: 'ch', text: 'Reviewed and forwarded', by: user, date, note });
-    } else if (action === 'approve') {
-      memo.status = 'approved';
-      memo.timeline.push({ t: 'ok', text: 'Approved', by: user, date, note });
-    } else if (action === 'return') {
-      memo.status = 'rejected';
-      memo.timeline.push({ t: 'r', text: 'Returned for revision', by: user, date, note });
-    }
-    
-    memos[memoIndex] = memo;
-    return Promise.resolve({ data: memo });
+    await api.post(`/memos/${encodeURIComponent(id)}/${action}/`, { remarks: note });
+    const updated = await api.get(`/memos/${encodeURIComponent(id)}/`);
+    return { data: normalizeMemo(updated.data) };
+  },
+};
+
+export const getMemo = async (id) => {
+  const response = await api.get(`/memos/${encodeURIComponent(id)}/`);
+  return { data: normalizeMemo(response.data) };
+};
+
+export const createMemo = async (data) => {
+  const response = await api.post('/memos/', toBackendMemo(data));
+  let memo = normalizeMemo(response.data);
+
+  if (data.status === 'submitted') {
+    await api.post(`/memos/${encodeURIComponent(memo.id)}/submit/`, { remarks: '' });
+    const updated = await api.get(`/memos/${encodeURIComponent(memo.id)}/`);
+    memo = normalizeMemo(updated.data);
   }
+
+  return { data: memo };
+};
+
+export const updateMemo = async (id, data) => {
+  const payload = toBackendMemo(data);
+  const response = await api.patch(`/memos/${encodeURIComponent(id)}/`, payload);
+  let memo = normalizeMemo(response.data);
+
+  if (data.status === 'submitted') {
+    await api.post(`/memos/${encodeURIComponent(id)}/submit/`, { remarks: '' });
+  } else if (data.status === 'checking') {
+    await api.post(`/memos/${encodeURIComponent(id)}/check/`, { remarks: '' });
+  } else if (data.status === 'approved') {
+    await api.post(`/memos/${encodeURIComponent(id)}/approve/`, { remarks: '' });
+  } else if (data.status === 'rejected') {
+    await api.post(`/memos/${encodeURIComponent(id)}/reject/`, { remarks: '' });
+  }
+
+  const updated = await api.get(`/memos/${encodeURIComponent(id)}/`);
+  memo = normalizeMemo(updated.data);
+  return { data: memo };
 };

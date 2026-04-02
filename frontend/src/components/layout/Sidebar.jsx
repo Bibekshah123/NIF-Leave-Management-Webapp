@@ -1,7 +1,11 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 
 const Sidebar = () => {
+  const { role } = useAuth();
+  const canCreateMemo = role === 'maker' || role === 'admin';
+
   return (
     <nav className="sidebar">
       <div className="sb-section">
@@ -26,15 +30,17 @@ const Sidebar = () => {
         </NavLink>
       </div>
 
-      <div className="sb-section">
-        <div className="sb-hd">Quick Actions</div>
-        <div className="sb-item" style={{ color: 'var(--nepal-blue)', fontWeight: 600 }}>
-          <NavLink to="/memos/new" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', width: '100%' }}>
-            <span className="sb-ico" style={{ marginRight: '10px' }}>+</span>
-            Draft New Memo
-          </NavLink>
+      {canCreateMemo && (
+        <div className="sb-section">
+          <div className="sb-hd">Quick Actions</div>
+          <div className="sb-item" style={{ color: 'var(--nepal-blue)', fontWeight: 600 }}>
+            <NavLink to="/memos/new" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', width: '100%' }}>
+              <span className="sb-ico" style={{ marginRight: '10px' }}>+</span>
+              Draft New Memo
+            </NavLink>
+          </div>
         </div>
-      </div>
+      )}
     </nav>
   );
 };

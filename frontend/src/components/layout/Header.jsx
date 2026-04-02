@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth.jsx';
 
 const Header = () => {
-  const { role, user, switchRole } = useAuth();
+  const { role, user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const isLeaveModule = location.pathname.startsWith('/leave');
@@ -31,24 +31,16 @@ const Header = () => {
             Memo Approval
           </button>
         </div>
-        <div className="role-switcher">
-          <button className={`rs-btn ${role === 'maker' ? 'on' : ''}`} onClick={() => switchRole('maker')}>
-            <span className="rs-pip pip-m"></span>Maker
-          </button>
-          <button className={`rs-btn ${role === 'checker' ? 'on' : ''}`} onClick={() => switchRole('checker')}>
-            <span className="rs-pip pip-c"></span>Checker
-          </button>
-          <button className={`rs-btn ${role === 'approver' ? 'on' : ''}`} onClick={() => switchRole('approver')}>
-            <span className="rs-pip pip-a"></span>Approver
-          </button>
-        </div>
         <div className="hd-user">
-          <div className="hd-av" style={{ background: user.color }}>{user.initials}</div>
+          <div className="hd-av" style={{ background: user?.initials ? user.color : '#999' }}>{user?.initials || 'U'}</div>
           <div>
-            <div style={{ fontSize: '12px', color: 'var(--text-primary)', fontWeight: 600 }}>{user.name}</div>
-            <div style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>{user.title} · {role.charAt(0).toUpperCase() + role.slice(1)}</div>
+            <div style={{ fontSize: '12px', color: 'var(--text-primary)', fontWeight: 600 }}>{user?.full_name || user?.username || 'User'}</div>
+            <div style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>{user?.email || ''} · {role ? role.charAt(0).toUpperCase() + role.slice(1) : 'Guest'}</div>
           </div>
         </div>
+        <button className="btn btn-ghost btn-sm" onClick={() => logout()} style={{ marginLeft: '18px' }}>
+          Logout
+        </button>
       </div>
     </header>
   );
