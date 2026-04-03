@@ -8,7 +8,7 @@ from rest_framework_simplejwt.views import (
 
 from memos.views import MemoViewSet
 from leaves.views import LeaveViewSet, LeaveBalanceView, LeaveCalendarView
-from users.views import CurrentUserView
+from users.views import CurrentUserView, RegisterView
 
 # Automated routing for ViewSets
 router = DefaultRouter()
@@ -21,6 +21,7 @@ urlpatterns = [
     # Auth APIs (JWT Authentication)
     path('api/v1/auth/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/v1/auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/v1/auth/register/', RegisterView.as_view(), name='token_register'),
     path('api/v1/auth/user/', CurrentUserView.as_view(), name='token_user'),
     
     # Workflow & Leaves APIs

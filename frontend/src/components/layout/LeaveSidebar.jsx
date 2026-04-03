@@ -5,6 +5,7 @@ import { useAuth } from '../../hooks/useAuth';
 const LeaveSidebar = () => {
   const { role } = useAuth();
   const canApply = role === 'maker' || role === 'admin';
+  const canReview = ['checker', 'approver', 'admin'].includes(role);
   const canApprove = role === 'approver' || role === 'admin';
 
   return (
@@ -35,12 +36,12 @@ const LeaveSidebar = () => {
           </span>
           My Applications
         </NavLink>
-        {canApprove && (
+        {canReview && (
           <NavLink to="/leave/pending" className={({ isActive }) => `sb-item ${isActive ? 'on' : ''}`}>
             <span className="sb-ico">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
             </span>
-            Pending Approval
+            Pending Requests
           </NavLink>
         )}
       </div>

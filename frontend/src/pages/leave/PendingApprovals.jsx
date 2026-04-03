@@ -11,13 +11,16 @@ const PendingApprovals = () => {
     fetchLeaves();
   }, [fetchLeaves]);
 
-  if (role !== 'approver' && role !== 'admin') {
+  const canApprove = role === 'approver' || role === 'admin';
+  const canReview = ['checker', 'approver', 'admin'].includes(role);
+
+  if (!canReview) {
     return (
       <div className="page">
         <div className="pg-head">
           <div>
             <div className="pg-title">Access Denied</div>
-            <div className="pg-desc">Only approvers may review pending leave approvals.</div>
+            <div className="pg-desc">Only checkers and approvers may view pending leave requests.</div>
           </div>
         </div>
         <div className="empty-state">
@@ -83,8 +86,16 @@ const PendingApprovals = () => {
               </div>
               
               <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', borderTop: '1px solid var(--border-light)', paddingTop: '16px'}}>
-                <button className="btn btn-ghost" style={{ borderColor: 'var(--nepal-red)', color: 'var(--nepal-red)'}} onClick={() => handleAction(leave.id, 'rejected')}>Reject</button>
-                <button className="btn btn-success" onClick={() => handleAction(leave.id, 'approved')}>Approve ✓</button>
+                {canApprove ? (
+                  <>
+                    <button className="btn btn-ghost" style={{ borderColor: 'var(--nepal-red)', color: 'var(--nepal-red)'}} onClick={() => handleAction(leave.id, 'rejected')}>Reject</button>
+                    <button className="btn btn-success" onClick={() => handleAction(leave.id, 'approved')}>Approve ✓</button>
+                  </>
+                ) : (
+                  <div style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>
+                    Checkers can review request details here. Approval actions are reserved for approvers.
+                  </div>
+                )}
               </div>
             </div>
           ))}

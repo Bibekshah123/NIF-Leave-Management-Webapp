@@ -7,7 +7,7 @@ import Badge from '../../components/common/Badge';
 const MyApplications = () => {
   const navigate = useNavigate();
   const { leaves, loading, fetchLeaves } = useLeaves();
-  const { user } = useAuth();
+  const { user, role } = useAuth();
   const [filter, setFilter] = useState('all');
 
   useEffect(() => {
@@ -24,7 +24,9 @@ const MyApplications = () => {
           <div className="pg-desc">Track all your leave applications</div>
         </div>
         <div className="pg-actions">
-          <button className="btn btn-accent" onClick={() => navigate('/leave/apply')}>+ New Application</button>
+          {(role === 'maker' || role === 'admin') && (
+            <button className="btn btn-accent" onClick={() => navigate('/leave/apply')}>+ New Application</button>
+          )}
         </div>
       </div>
       <div className="table-card">

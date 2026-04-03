@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLeaves } from '../../hooks/useLeaves';
+import { useAuth } from '../../hooks/useAuth';
 import LeaveCard from '../../components/common/LeaveCard';
 import { CalendarDays, Stethoscope, Briefcase, Plane, Plus, ArrowRight } from 'lucide-react';
 
 const LeaveDashboard = () => {
   const navigate = useNavigate();
   const { leaves, loading, fetchLeaves } = useLeaves();
+  const { role } = useAuth();
 
   useEffect(() => {
     fetchLeaves();
@@ -29,9 +31,11 @@ const LeaveDashboard = () => {
           <div className="pg-desc">Manage your leave balance and applications</div>
         </div>
         <div className="pg-actions">
-          <button className="btn btn-primary" onClick={() => navigate('/leave/apply')}>
-            <Plus size={18} /> Apply for Leave
-          </button>
+          {(role === 'maker' || role === 'admin') && (
+            <button className="btn btn-primary" onClick={() => navigate('/leave/apply')}>
+              <Plus size={18} /> Apply for Leave
+            </button>
+          )}
         </div>
       </div>
 
