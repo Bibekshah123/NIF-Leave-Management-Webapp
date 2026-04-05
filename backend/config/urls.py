@@ -6,13 +6,11 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
-from memos.views import MemoViewSet
 from leaves.views import LeaveViewSet, LeaveBalanceView, LeaveCalendarView
 from users.views import CurrentUserView, RegisterView
 
 # Automated routing for ViewSets
 router = DefaultRouter()
-router.register(r'memos', MemoViewSet, basename='memo')
 router.register(r'leaves', LeaveViewSet, basename='leave')
 
 urlpatterns = [

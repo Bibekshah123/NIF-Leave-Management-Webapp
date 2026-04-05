@@ -1222,8 +1222,8 @@ tr.mrow:hover td { background: rgba(var(--brand-blue-rgb), 0.02); cursor: pointe
 .ap-btns { display: flex; gap: 16px; flex-wrap: wrap; }
 
 .ref-no { font-family: 'Inter', monospace; font-size: 14px; font-weight: 600; color: var(--text-muted); }
-.memo-subj { font-weight: 700; color: var(--text-primary); font-size: 16px; }
-.memo-from { font-size: 14px; color: var(--text-secondary); margin-top: 6px; }
+.leave-title { font-weight: 700; color: var(--text-primary); font-size: 16px; }
+.leave-meta { font-size: 14px; color: var(--text-secondary); margin-top: 6px; }
 
 /* Overrides for clean text inputs */
 input, textarea, select { font-family: 'Inter', sans-serif; }

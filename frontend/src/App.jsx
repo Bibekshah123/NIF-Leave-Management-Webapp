@@ -1,10 +1,6 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './components/layout/Layout';
-import Dashboard from './pages/memo/Dashboard';
-import MemoList from './pages/memo/MemoList';
-import MemoDetail from './pages/memo/MemoDetail';
-import NewMemo from './pages/memo/NewMemo';
 import Login from './pages/Login';
 import RoleLanding from './pages/RoleLanding';
 import RequireAuth from './components/common/RequireAuth';
@@ -23,13 +19,6 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<RequireAuth><Layout /></RequireAuth>}>
           <Route index element={<RoleLanding />} />
-          <Route path="memos" element={<Dashboard />} />
-          <Route path="memos/all" element={<MemoList />} />
-          <Route path="memos/drafts" element={<MemoList filter="drafts" />} />
-          <Route path="memos/new" element={<NewMemo />} />
-          <Route path="memos/:id" element={<MemoDetail />} />
-
-          {/* Leave Routes */}
           <Route path="leave" element={<LeaveDashboard />} />
           <Route path="leave/apply" element={<ApplyLeave />} />
           <Route path="leave/my-applications" element={<MyApplications />} />

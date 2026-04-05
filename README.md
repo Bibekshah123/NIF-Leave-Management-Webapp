@@ -1,13 +1,13 @@
 # NIF Leave Management System
 
-A comprehensive leave management and memo approval system built with Django REST Framework (backend) and React + Vite (frontend). Supports role-based access for makers, checkers, and approvers.
+A modern, role-based leave management system built with Django REST Framework (backend) and React + Vite (frontend). Supports role-based access for makers (apply for leave), checkers (review requests), and approvers (approve/reject).
 
 ## Features
 
 - **Role-Based Access Control**: Separate interfaces for makers (apply for leave), checkers (review requests), and approvers (approve/reject).
 - **Leave Management**: Apply, track, and manage leave requests with calendar view.
-- **Memo Approval Workflow**: Create, submit, check, and approve memos.
 - **User Registration**: Self-registration with automatic maker role assignment.
+- **Team Calendar**: Visual calendar to view approved leaves across the team.
 - **Responsive Design**: Modern, professional UI that works on all devices.
 - **JWT Authentication**: Secure token-based authentication.
 
@@ -32,7 +32,6 @@ leave-system/
 │   ├── config/             # Django settings
 │   ├── users/              # User management app
 │   ├── leaves/             # Leave management app
-│   ├── memos/              # Memo approval app
 │   ├── db.sqlite3          # SQLite database
 │   └── requirements.txt    # Python dependencies
 ├── frontend/               # React frontend
@@ -122,9 +121,9 @@ The frontend will be available at `http://localhost:5173` (proxied to backend AP
 
 ## User Roles
 
-- **Maker**: Can apply for leave and create memos
-- **Checker**: Can review pending leave requests and check memos
-- **Approver**: Can approve/reject leave requests and approve memos
+- **Maker**: Can apply for leave
+- **Checker**: Can review pending leave requests
+- **Approver**: Can approve/reject leave requests
 - **Admin**: Full access to all features
 
 ## API Endpoints
@@ -136,15 +135,10 @@ The frontend will be available at `http://localhost:5173` (proxied to backend AP
 
 ### Leaves
 - `GET /api/v1/leaves/` - List leaves (filtered by role)
-- `POST /api/v1/leaves/` - Create leave request
-- `POST /api/v1/leaves/{id}/set_status/` - Update leave status
+- `POST /api/v1/leaves/` - Create leave request (makers only)
+- `POST /api/v1/leaves/{id}/set_status/` - Update leave status (approvers only)
 - `GET /api/v1/leaves/balance` - Get leave balances
 - `GET /api/v1/leaves/calendar` - Get approved leaves for calendar
-
-### Memos
-- `GET /api/v1/memos/` - List memos (filtered by role)
-- `POST /api/v1/memos/` - Create memo
-- `PATCH /api/v1/memos/{id}/` - Update memo status
 
 ## Development
 

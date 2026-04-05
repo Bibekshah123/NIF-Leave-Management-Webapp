@@ -22,7 +22,6 @@ INSTALLED_APPS = [
     
     # Local Apps
     'users.apps.UsersConfig',
-    'memos.apps.MemosConfig',
     'leaves.apps.LeavesConfig',
 ]
 

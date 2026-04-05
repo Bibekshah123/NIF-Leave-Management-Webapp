@@ -33,8 +33,3 @@ class IsCheckerOrApprover(permissions.BasePermission):
             User.Roles.ADMIN
         ]
 
-class IsMemoOwnerOrAdmin(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj):
-        return request.user.is_authenticated and (
-            obj.maker == request.user or request.user.role == User.Roles.ADMIN
-        )

@@ -86,8 +86,8 @@ const Login = () => {
           <img src="/NIF.png" alt="NIF Logo" className="login-brand" />
           <div className="login-hero-copy">
             <p className="login-badge">NIF Portal</p>
-            <h1>One portal for leave management and memo approval.</h1>
-            <p className="login-subtitle">Sign in to continue to your workspace. As a maker, checker, or approver, you will see the tools and workflows that belong to your role.</p>
+            <h1>One portal for leave management.</h1>
+            <p className="login-subtitle">Sign in to continue to your workspace. Manage your leave requests as a maker, checker, or approver with role-based access control.</p>
           </div>
 
           <div className="login-features">
@@ -108,8 +108,8 @@ const Login = () => {
             <div className="feature-item">
               <span>•</span>
               <div>
-                <strong>Unified workflow</strong>
-                <p>Manage memos and leave from the same polished portal.</p>
+                <strong>Unified leave management</strong>
+                <p>Apply, review, and approve leave requests from one portal.</p>
               </div>
             </div>
           </div>

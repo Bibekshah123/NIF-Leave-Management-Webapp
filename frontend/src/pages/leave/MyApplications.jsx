@@ -57,15 +57,15 @@ const MyApplications = () => {
                 <tr key={leave.id} className="mrow">
                   <td>
                     <div className="ref-no">{leave.id}</div>
-                    <div className="memo-from">{leave.applied}</div>
+                    <div className="leave-meta">{leave.applied}</div>
                   </td>
                   <td>
-                    <div className="memo-subj">{leave.type}</div>
-                    <div className="memo-from">{leave.reason}</div>
+                    <div className="leave-title">{leave.type}</div>
+                    <div className="leave-meta">{leave.reason}</div>
                   </td>
                   <td>
                     <div style={{ fontSize: '13px', color: 'var(--text-primary)' }}>{leave.start} to {leave.end}</div>
-                    <div className="memo-from">{leave.days} Days</div>
+                    <div className="leave-meta">{leave.days} Days</div>
                   </td>
                   <td>
                     <Badge status={leave.status} />
