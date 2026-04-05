@@ -8,6 +8,17 @@ const ApplyLeave = () => {
   const { applyLeave, loading } = useLeaves();
   const { role } = useAuth();
 
+  const [formData, setFormData] = useState({
+    type: 'Annual Leave',
+    priority: 'Normal',
+    start: '',
+    end: '',
+    manager: 'Sita Koirala — Programme Manager',
+    contact: '',
+    reason: '',
+    handover: ''
+  });
+
   if (role !== 'maker' && role !== 'admin') {
     return (
       <div className="page">
@@ -24,17 +35,6 @@ const ApplyLeave = () => {
       </div>
     );
   }
-
-  const [formData, setFormData] = useState({
-    type: 'Annual Leave',
-    priority: 'Normal',
-    start: '',
-    end: '',
-    manager: 'Sita Koirala — Programme Manager',
-    contact: '',
-    reason: '',
-    handover: ''
-  });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id.replace('lv-', '')]: e.target.value });

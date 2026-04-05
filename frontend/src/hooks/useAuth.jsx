@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }) => {
       setUser(uiUser);
       setRole(response.data.role);
       setIsAuthenticated(true);
-    } catch (err) {
+    } catch {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
       setUser(null);
@@ -98,4 +98,4 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => useContext(AuthContext); // eslint-disable-line react-refresh/only-export-components

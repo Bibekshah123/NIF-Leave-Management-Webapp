@@ -1,12 +1,8 @@
 import React from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth.jsx';
 
 const Header = () => {
   const { role, user, logout } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const isLeaveModule = location.pathname.startsWith('/leave');
 
   return (
     <header className="header">

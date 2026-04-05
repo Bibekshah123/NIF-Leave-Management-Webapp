@@ -55,20 +55,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# Using SQLite for initial rapid prototyping. To use Postgres:
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'nif_db',
-#         'USER': 'postgres',
-#         'PASSWORD': 'password',
-#         'HOST': 'localhost',
-#     }
-# }
+# Using PostgreSQL for production-ready database
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'leave_system',
+        'USER': 'leave_user',
+        'PASSWORD': 'leave_password_123',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 

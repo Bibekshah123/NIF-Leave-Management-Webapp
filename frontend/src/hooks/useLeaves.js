@@ -4,6 +4,7 @@ import { useAuth } from './useAuth';
 
 export const useLeaves = () => {
   const [leaves, setLeaves] = useState([]);
+  const [balances, setBalances] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const { user } = useAuth();
@@ -16,6 +17,19 @@ export const useLeaves = () => {
       setError(null);
     } catch (err) {
       setError(err.message || 'Failed to fetch leave data');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const fetchBalances = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await leaveService.getBalances();
+      setBalances(response.data);
+      setError(null);
+    } catch (err) {
+      setError(err.message || 'Failed to fetch balance data');
     } finally {
       setLoading(false);
     }
@@ -49,5 +63,5 @@ export const useLeaves = () => {
     }
   };
 
-  return { leaves, loading, error, fetchLeaves, applyLeave, updateLeaveStatus };
+  return { leaves, balances, loading, error, fetchLeaves, fetchBalances, applyLeave, updateLeaveStatus };
 };

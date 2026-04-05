@@ -7,18 +7,24 @@ import { CalendarDays, Stethoscope, Briefcase, Plane, Plus, ArrowRight } from 'l
 
 const LeaveDashboard = () => {
   const navigate = useNavigate();
-  const { leaves, loading, fetchLeaves } = useLeaves();
+  const { leaves, balances, loading, fetchLeaves, fetchBalances } = useLeaves();
   const { role } = useAuth();
 
   useEffect(() => {
     fetchLeaves();
-  }, [fetchLeaves]);
+    fetchBalances();
+  }, [fetchLeaves, fetchBalances]);
 
   const stats = {
     total: leaves.length,
     pending: leaves.filter(l => l.status === 'pending').length,
     approved: leaves.filter(l => l.status === 'approved').length,
     rejected: leaves.filter(l => l.status === 'rejected').length
+  };
+
+  const getBalance = (type) => {
+    const balance = balances.find(b => b.leave_type === type);
+    return balance || { total_allocated: 0, used_so_far: 0, remaining: 0 };
   };
 
   const recent = leaves.slice(0, 4);
@@ -52,75 +58,95 @@ const LeaveDashboard = () => {
             
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
               {/* Annual Leave */}
-              <div className="balance-card">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div className="bc-type">Annual Leave</div>
-                  <CalendarDays size={18} color="var(--brand-blue)" />
-                </div>
-                <div className="bc-used">18</div>
-                <div style={{ background: 'var(--bg-main)', height: '8px', borderRadius: '4px', marginTop: '12px', overflow: 'hidden' }}>
-                  <div style={{ background: 'var(--brand-blue)', height: '100%', width: '60%', borderRadius: '4px' }}></div>
-                </div>
-                <div className="bc-total" style={{ marginTop: '12px' }}>
-                  Remaining: <span style={{ fontWeight: 600, color: 'var(--text-primary)'}}>12</span> / 30 days
-                </div>
-              </div>
+              {(() => {
+                const balance = getBalance('annual');
+                const usedPercent = balance.total_allocated > 0 ? (balance.used_so_far / balance.total_allocated) * 100 : 0;
+                return (
+                  <div className="balance-card">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div className="bc-type">Annual Leave</div>
+                      <CalendarDays size={18} color="var(--brand-blue)" />
+                    </div>
+                    <div className="bc-used">{balance.used_so_far}</div>
+                    <div style={{ background: 'var(--bg-main)', height: '8px', borderRadius: '4px', marginTop: '12px', overflow: 'hidden' }}>
+                      <div style={{ background: 'var(--brand-blue)', height: '100%', width: `${usedPercent}%`, borderRadius: '4px' }}></div>
+                    </div>
+                    <div className="bc-total" style={{ marginTop: '12px' }}>
+                      Remaining: <span style={{ fontWeight: 600, color: 'var(--text-primary)'}}>{balance.remaining}</span> / {balance.total_allocated} days
+                    </div>
+                  </div>
+                );
+              })()}
 
               {/* Sick Leave */}
-              <div className="balance-card">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div className="bc-type">Sick Leave</div>
-                  <Stethoscope size={18} color="var(--brand-red)" />
-                </div>
-                <div className="bc-used">5</div>
-                <div style={{ background: 'var(--bg-main)', height: '8px', borderRadius: '4px', marginTop: '12px', overflow: 'hidden' }}>
-                  <div style={{ background: 'var(--brand-red)', height: '100%', width: '41.6%', borderRadius: '4px' }}></div>
-                </div>
-                <div className="bc-total" style={{ marginTop: '12px' }}>
-                  Remaining: <span style={{ fontWeight: 600, color: 'var(--text-primary)'}}>7</span> / 12 days
-                </div>
-              </div>
+              {(() => {
+                const balance = getBalance('sick');
+                const usedPercent = balance.total_allocated > 0 ? (balance.used_so_far / balance.total_allocated) * 100 : 0;
+                return (
+                  <div className="balance-card">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div className="bc-type">Sick Leave</div>
+                      <Stethoscope size={18} color="var(--brand-red)" />
+                    </div>
+                    <div className="bc-used">{balance.used_so_far}</div>
+                    <div style={{ background: 'var(--bg-main)', height: '8px', borderRadius: '4px', marginTop: '12px', overflow: 'hidden' }}>
+                      <div style={{ background: 'var(--brand-red)', height: '100%', width: `${usedPercent}%`, borderRadius: '4px' }}></div>
+                    </div>
+                    <div className="bc-total" style={{ marginTop: '12px' }}>
+                      Remaining: <span style={{ fontWeight: 600, color: 'var(--text-primary)'}}>{balance.remaining}</span> / {balance.total_allocated} days
+                    </div>
+                  </div>
+                );
+              })()}
 
               {/* Casual Leave */}
-              <div className="balance-card">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div className="bc-type">Casual Leave</div>
-                  <Briefcase size={18} color="var(--success)" />
-                </div>
-                <div className="bc-used">3</div>
-                <div style={{ background: 'var(--bg-main)', height: '8px', borderRadius: '4px', marginTop: '12px', overflow: 'hidden' }}>
-                  <div style={{ background: 'var(--success)', height: '100%', width: '30%', borderRadius: '4px' }}></div>
-                </div>
-                <div className="bc-total" style={{ marginTop: '12px' }}>
-                  Remaining: <span style={{ fontWeight: 600, color: 'var(--text-primary)'}}>7</span> / 10 days
-                </div>
-              </div>
+              {(() => {
+                const balance = getBalance('casual');
+                const usedPercent = balance.total_allocated > 0 ? (balance.used_so_far / balance.total_allocated) * 100 : 0;
+                return (
+                  <div className="balance-card">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div className="bc-type">Casual Leave</div>
+                      <Briefcase size={18} color="var(--success)" />
+                    </div>
+                    <div className="bc-used">{balance.used_so_far}</div>
+                    <div style={{ background: 'var(--bg-main)', height: '8px', borderRadius: '4px', marginTop: '12px', overflow: 'hidden' }}>
+                      <div style={{ background: 'var(--success)', height: '100%', width: `${usedPercent}%`, borderRadius: '4px' }}></div>
+                    </div>
+                    <div className="bc-total" style={{ marginTop: '12px' }}>
+                      Remaining: <span style={{ fontWeight: 600, color: 'var(--text-primary)'}}>{balance.remaining}</span> / {balance.total_allocated} days
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
           </section>
 
-          {/* Recent Applications Section */}
-          <section>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
-              <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)', fontFamily: '"Playfair Display", serif' }}>Recent Applications</h3>
-              <button 
-                onClick={() => navigate('/leave/my-applications')}
-                style={{ background: 'none', border: 'none', color: 'var(--brand-blue)', fontSize: '13px', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
-              >
-                View full history <ArrowRight size={14} />
-              </button>
-            </div>
-            
-            <div className="table-card" style={{ padding: '24px' }}>
-              {loading ? (
-                <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>Loading records...</div>
-              ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                  {recent.map(leave => <LeaveCard key={leave.id} leave={leave} />)}
-                  {recent.length === 0 && <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>No recent applications found.</div>}
-                </div>
-              )}
-            </div>
-          </section>
+          {/* Recent Applications Section - Only for non-approvers */}
+          {role !== 'approver' && (
+            <section>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+                <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)', fontFamily: '"Playfair Display", serif' }}>Recent Applications</h3>
+                <button 
+                  onClick={() => navigate('/leave/my-applications')}
+                  style={{ background: 'none', border: 'none', color: 'var(--brand-blue)', fontSize: '13px', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+                >
+                  View full history <ArrowRight size={14} />
+                </button>
+              </div>
+              
+              <div className="table-card" style={{ padding: '24px' }}>
+                {loading ? (
+                  <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>Loading records...</div>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    {recent.map(leave => <LeaveCard key={leave.id} leave={leave} />)}
+                    {recent.length === 0 && <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>No recent applications found.</div>}
+                  </div>
+                )}
+              </div>
+            </section>
+          )}
 
         </div>
 

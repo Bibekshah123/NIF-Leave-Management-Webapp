@@ -46,6 +46,11 @@ export const leaveService = {
     return { data: response.data.map(mapLeave) };
   },
 
+  getBalances: async () => {
+    const response = await api.get('/leaves/balance');
+    return { data: response.data };
+  },
+
   create: async (data, employeeName) => {
     const response = await api.post('/leaves/', toBackendPayload(data));
     const leave = mapLeave(response.data);

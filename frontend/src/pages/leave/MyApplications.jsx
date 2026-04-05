@@ -10,6 +10,24 @@ const MyApplications = () => {
   const { user, role } = useAuth();
   const [filter, setFilter] = useState('all');
 
+  // Prevent approvers from accessing this page
+  if (role === 'approver') {
+    return (
+      <div className="page">
+        <div className="pg-head">
+          <div>
+            <div className="pg-title">Access Denied</div>
+            <div className="pg-desc">Approvers cannot view their own applications.</div>
+          </div>
+        </div>
+        <div className="empty-state">
+          <div className="empty-icon">!</div>
+          <div className="empty-msg">You do not have permission to view this page.</div>
+        </div>
+      </div>
+    );
+  }
+
   useEffect(() => {
     fetchLeaves();
   }, [fetchLeaves]);
