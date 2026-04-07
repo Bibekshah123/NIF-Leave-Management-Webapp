@@ -1,5 +1,8 @@
 from rest_framework import serializers
-from .models import User
+from django.contrib.auth import get_user_model
+import uuid
+
+User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
     full_name = serializers.SerializerMethodField()
@@ -17,12 +20,14 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'first_name', 'last_name', 'password']
+        fields = ['email', 'first_name', 'last_name', 'password']
 
     def create(self, validated_data):
+        email = validated_data['email']
+        username = email.split('@')[0] + '_' + str(uuid.uuid4())[:8]
         user = User.objects.create_user(
-            username=validated_data['username'],
-            email=validated_data.get('email', ''),
+            username=username,
+            email=email,
             password=validated_data['password'],
             first_name=validated_data.get('first_name', ''),
             last_name=validated_data.get('last_name', ''),

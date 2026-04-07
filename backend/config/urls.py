@@ -2,12 +2,12 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
     TokenRefreshView,
 )
 
 from leaves.views import LeaveViewSet, LeaveBalanceView, LeaveCalendarView
 from users.views import CurrentUserView, RegisterView
+from users.token_serializers import EmailLoginView
 
 # Automated routing for ViewSets
 router = DefaultRouter()
@@ -17,7 +17,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     
     # Auth APIs (JWT Authentication)
-    path('api/v1/auth/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/v1/auth/login/', EmailLoginView.as_view(), name='token_obtain_pair'),
     path('api/v1/auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/v1/auth/register/', RegisterView.as_view(), name='token_register'),
     path('api/v1/auth/user/', CurrentUserView.as_view(), name='token_user'),

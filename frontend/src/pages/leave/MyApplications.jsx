@@ -10,6 +10,10 @@ const MyApplications = () => {
   const { user, role } = useAuth();
   const [filter, setFilter] = useState('all');
 
+  useEffect(() => {
+    fetchLeaves();
+  }, [fetchLeaves]);
+
   // Prevent approvers from accessing this page
   if (role === 'approver') {
     return (
@@ -27,10 +31,6 @@ const MyApplications = () => {
       </div>
     );
   }
-
-  useEffect(() => {
-    fetchLeaves();
-  }, [fetchLeaves]);
 
   const myLeaves = leaves.filter(l => l.employee === user.name && (filter === 'all' || l.status === filter));
 

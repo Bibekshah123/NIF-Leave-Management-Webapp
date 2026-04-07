@@ -4,7 +4,7 @@ import { authService } from '../services/authService';
 const AuthContext = createContext();
 
 const buildUiUser = (profile) => {
-  const name = profile.full_name || profile.username;
+  const name = profile.full_name || profile.email?.split('@')[0] || 'User';
   const initials = name
     .split(' ')
     .map((word) => word[0] || '')
@@ -25,7 +25,7 @@ const buildUiUser = (profile) => {
     full_name: name,
     name,
     title: profile.role ? profile.role.charAt(0).toUpperCase() + profile.role.slice(1) : 'User',
-    initials: initials || profile.username.slice(0, 2).toUpperCase(),
+    initials: initials || profile.email?.slice(0, 2).toUpperCase() || 'U',
     color: colorMap[profile.role] || '#6B7280',
   };
 };
@@ -65,10 +65,10 @@ export const AuthProvider = ({ children }) => {
     loadUser();
   }, []);
 
-  const login = async (username, password) => {
+  const login = async (email, password) => {
     setError(null);
     try {
-      const response = await authService.login(username, password);
+      const response = await authService.login(email, password);
       localStorage.setItem('accessToken', response.data.access);
       localStorage.setItem('refreshToken', response.data.refresh);
       const profile = await authService.me();
