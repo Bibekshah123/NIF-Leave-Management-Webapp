@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useLeaves } from '../../hooks/useLeaves';
 import LeaveCard from '../../components/common/LeaveCard';
+import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const TeamCalendar = () => {
+  const navigate = useNavigate();
   const { leaves, fetchLeaves } = useLeaves();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -30,15 +33,9 @@ const TeamCalendar = () => {
     });
   };
 
-  const handleMonthChange = (e) => {
-    setCurrentDate(new Date(year, parseInt(e.target.value), 1));
-  };
-
-  const handleYearChange = (e) => {
-    setCurrentDate(new Date(parseInt(e.target.value), month, 1));
-  };
-
   const goToToday = () => setCurrentDate(new Date());
+  const goToPrevMonth = () => setCurrentDate(new Date(year, month - 1, 1));
+  const goToNextMonth = () => setCurrentDate(new Date(year, month + 1, 1));
 
   // Generate blank spaces before first day
   const blanks = Array.from({ length: firstDayOfMonth }).map((_, i) => (
@@ -70,53 +67,74 @@ const TeamCalendar = () => {
   return (
     <div className="page">
       <div className="pg-head">
-        <div>
+        <div className="pg-head-left">
+          <div className="pg-breadcrumb">
+            <button className="pg-back" onClick={() => navigate('/leave')}>
+              <ArrowLeft size={18} />
+            </button>
+            Leave Management
+          </div>
           <div className="pg-title">Team Calendar</div>
           <div className="pg-desc">View team leave schedules and plan accordingly</div>
         </div>
-        <div className="pg-actions">
-          <select value={month} onChange={handleMonthChange} className="btn btn-ghost btn-sm">
-            {monthNames.map((name, idx) => (
-              <option key={idx} value={idx}>{name}</option>
-            ))}
-          </select>
-          <input
-            type="number"
-            value={year}
-            onChange={handleYearChange}
-            className="btn btn-ghost btn-sm"
-            style={{ width: '80px' }}
-            min="2020"
-            max="2030"
-          />
-          <button className="btn btn-ghost btn-sm" onClick={goToToday}>Today</button>
+        <div className="pg-head-right">
+          <div className="pg-logo">
+            <img src="/NIF.png" alt="NIF Logo" />
+          </div>
         </div>
       </div>
 
-      <div className="calendar-container">
-        <div className="calendar-header">
-          <div className="calendar-title">
-            {monthNames[month]} {year}
+      <div className="table-card" style={{ padding: '24px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <button className="btn btn-ghost btn-sm" onClick={goToPrevMonth}>
+              <ChevronLeft size={18} />
+            </button>
+            <h3 style={{ fontFamily: '"Playfair Display", serif', fontSize: '24px', fontWeight: 700, minWidth: '200px', textAlign: 'center' }}>
+              {monthNames[month]} {year}
+            </h3>
+            <button className="btn btn-ghost btn-sm" onClick={goToNextMonth}>
+              <ChevronRight size={18} />
+            </button>
           </div>
-          <div className="calendar-legend">
-            <span className="legend-item">
-              <span className="legend-color pending"></span> Pending
-            </span>
-            <span className="legend-item">
-              <span className="legend-color approved"></span> Approved
-            </span>
-            <span className="legend-item">
-              <span className="legend-color today"></span> Today
-            </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <button className="btn btn-ghost btn-sm" onClick={goToToday}>Today</button>
+            <div className="calendar-legend">
+              <span className="legend-item">
+                <span className="legend-color pending"></span> Pending
+              </span>
+              <span className="legend-item">
+                <span className="legend-color approved"></span> Approved
+              </span>
+            </div>
           </div>
         </div>
 
-        <div className="calendar-grid">
-          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(h => (
-            <div key={h} className="cal-day header">{h}</div>
-          ))}
-          {blanks}
-          {days}
+        <div className="calendar-container">
+          <div className="calendar-header">
+            <div className="calendar-title">
+              {monthNames[month]} {year}
+            </div>
+            <div className="calendar-legend">
+              <span className="legend-item">
+                <span className="legend-color pending"></span> Pending
+              </span>
+              <span className="legend-item">
+                <span className="legend-color approved"></span> Approved
+              </span>
+              <span className="legend-item">
+                <span className="legend-color today"></span> Today
+              </span>
+            </div>
+          </div>
+
+          <div className="calendar-grid">
+            {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(h => (
+              <div key={h} className="cal-day header">{h}</div>
+            ))}
+            {blanks}
+            {days}
+          </div>
         </div>
       </div>
 

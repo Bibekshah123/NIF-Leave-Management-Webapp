@@ -55,15 +55,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# Using PostgreSQL for production-ready database
+# Database - uses environment variables for Docker
+import os
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'leave_system',
-        'USER': 'leave_user',
-        'PASSWORD': 'leave_password_123',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': os.getenv('DATABASE_NAME', 'leave_system'),
+        'USER': os.getenv('DATABASE_USER', 'leave_user'),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD', 'leave_password_123'),
+        'HOST': os.getenv('DATABASE_HOST', 'localhost'),
+        'PORT': os.getenv('DATABASE_PORT', '5432'),
     }
 }
 

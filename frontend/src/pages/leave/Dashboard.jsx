@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useLeaves } from '../../hooks/useLeaves';
 import { useAuth } from '../../hooks/useAuth';
 import LeaveCard from '../../components/common/LeaveCard';
-import { CalendarDays, Stethoscope, Briefcase, Plane, Plus, ArrowRight } from 'lucide-react';
+import { CalendarDays, Stethoscope, Briefcase, Plane, Plus, ArrowRight, ClipboardCheck, Users, Calendar, FileText, CheckCircle, Clock, XCircle } from 'lucide-react';
 
 const LeaveDashboard = () => {
   const navigate = useNavigate();
@@ -29,19 +29,222 @@ const LeaveDashboard = () => {
 
   const recent = leaves.slice(0, 4);
 
+  if (role === 'approver' || role === 'checker') {
+    return (
+      <div className="page" style={{ paddingBottom: '80px' }}>
+        <div className="pg-head">
+          <div className="pg-head-left">
+            <div className="pg-breadcrumb">Leave Management</div>
+            <div className="pg-title">Approval Dashboard</div>
+            <div className="pg-desc">Review and manage team leave applications</div>
+          </div>
+          <div className="pg-head-right">
+            <div className="pg-logo">
+              <img src="/NIF.png" alt="NIF Logo" />
+            </div>
+          </div>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px', marginBottom: '32px' }}>
+          <div className="side-card" style={{ padding: '24px', cursor: 'pointer' }} onClick={() => navigate('/leave/pending')}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'var(--warning-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Clock size={24} color="var(--warning)" />
+              </div>
+              <div>
+                <div style={{ fontSize: '28px', fontFamily: '"Playfair Display", serif', fontWeight: 700, color: 'var(--warning)', lineHeight: 1 }}>{stats.pending}</div>
+                <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)', marginTop: '4px' }}>Pending Approvals</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="side-card" style={{ padding: '24px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'var(--success-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <CheckCircle size={24} color="var(--success)" />
+              </div>
+              <div>
+                <div style={{ fontSize: '28px', fontFamily: '"Playfair Display", serif', fontWeight: 700, color: 'var(--success)', lineHeight: 1 }}>{stats.approved}</div>
+                <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)', marginTop: '4px' }}>Approved</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="side-card" style={{ padding: '24px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'var(--danger-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <XCircle size={24} color="var(--danger)" />
+              </div>
+              <div>
+                <div style={{ fontSize: '28px', fontFamily: '"Playfair Display", serif', fontWeight: 700, color: 'var(--danger)', lineHeight: 1 }}>{stats.rejected}</div>
+                <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)', marginTop: '4px' }}>Rejected</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="table-card" style={{ padding: '24px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)', fontFamily: '"Playfair Display", serif' }}>What You Can Do</h3>
+          </div>
+          
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+            <div style={{ padding: '24px', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', transition: 'all 0.2s', cursor: 'pointer' }} onClick={() => navigate('/leave/pending')}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'var(--brand-blue)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <ClipboardCheck size={20} color="white" />
+                </div>
+                <div style={{ fontWeight: 600, fontSize: '16px' }}>Review Pending Requests</div>
+              </div>
+              <div style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+                View and process leave applications submitted by makers. Approve or reject based on team capacity and policies.
+              </div>
+            </div>
+
+            <div style={{ padding: '24px', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', transition: 'all 0.2s', cursor: 'pointer' }} onClick={() => navigate('/leave/calendar')}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'var(--success)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Calendar size={20} color="white" />
+                </div>
+                <div style={{ fontWeight: 600, fontSize: '16px' }}>View Team Calendar</div>
+              </div>
+              <div style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+                See who's out on which dates. Plan team activities and ensure coverage during absences.
+              </div>
+            </div>
+
+            <div style={{ padding: '24px', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', transition: 'all 0.2s', cursor: 'pointer' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'var(--draft)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Users size={20} color="white" />
+                </div>
+                <div style={{ fontWeight: 600, fontSize: '16px' }}>View Employee Information</div>
+              </div>
+              <div style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+                Access employee details including leave balances, application history, and contact information.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="table-card" style={{ padding: '24px', marginTop: '24px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)', fontFamily: '"Playfair Display", serif' }}>Recent Applications</h3>
+            <button 
+              onClick={() => navigate('/leave/pending')}
+              style={{ background: 'none', border: 'none', color: 'var(--brand-blue)', fontSize: '13px', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+            >
+              View all <ArrowRight size={14} />
+            </button>
+          </div>
+          
+          {loading ? (
+            <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>Loading records...</div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              {recent.map(leave => <LeaveCard key={leave.id} leave={leave} />)}
+              {recent.length === 0 && <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>No recent applications found.</div>}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="page" style={{ paddingBottom: '80px' }}>
       <div className="pg-head">
-        <div>
-          <div className="pg-title">Leave Dashboard</div>
-          <div className="pg-desc">Manage your leave balance and applications</div>
+        <div className="pg-head-left">
+          <div className="pg-breadcrumb">Leave Management</div>
+          <div className="pg-title">My Dashboard</div>
+          <div className="pg-desc">Manage your leave applications and track balances</div>
         </div>
-        <div className="pg-actions">
-          {(role === 'maker' || role === 'admin') && (
-            <button className="btn btn-primary" onClick={() => navigate('/leave/apply')}>
-              <Plus size={18} /> Apply for Leave
-            </button>
-          )}
+        <div className="pg-head-right">
+          <div className="pg-logo">
+            <img src="/NIF.png" alt="NIF Logo" />
+          </div>
+        </div>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px', marginBottom: '32px' }}>
+        <div className="side-card" style={{ padding: '24px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'var(--warning-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Clock size={24} color="var(--warning)" />
+            </div>
+            <div>
+              <div style={{ fontSize: '28px', fontFamily: '"Playfair Display", serif', fontWeight: 700, color: 'var(--warning)', lineHeight: 1 }}>{stats.pending}</div>
+              <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)', marginTop: '4px' }}>Pending</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="side-card" style={{ padding: '24px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'var(--success-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <CheckCircle size={24} color="var(--success)" />
+            </div>
+            <div>
+              <div style={{ fontSize: '28px', fontFamily: '"Playfair Display", serif', fontWeight: 700, color: 'var(--success)', lineHeight: 1 }}>{stats.approved}</div>
+              <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)', marginTop: '4px' }}>Approved</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="side-card" style={{ padding: '24px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'var(--danger-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <XCircle size={24} color="var(--danger)" />
+            </div>
+            <div>
+              <div style={{ fontSize: '28px', fontFamily: '"Playfair Display", serif', fontWeight: 700, color: 'var(--danger)', lineHeight: 1 }}>{stats.rejected}</div>
+              <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)', marginTop: '4px' }}>Rejected</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="table-card" style={{ padding: '24px', marginBottom: '32px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+          <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)', fontFamily: '"Playfair Display", serif' }}>What You Can Do</h3>
+        </div>
+        
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+          <div style={{ padding: '24px', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', transition: 'all 0.2s', cursor: 'pointer' }} onClick={() => navigate('/leave/apply')}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+              <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'var(--brand-blue)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Plus size={20} color="white" />
+              </div>
+              <div style={{ fontWeight: 600, fontSize: '16px' }}>Apply for Leave</div>
+            </div>
+            <div style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+              Submit a new leave request for annual, sick, casual, or other leave types. Your application will be reviewed by your manager.
+            </div>
+          </div>
+
+          <div style={{ padding: '24px', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', transition: 'all 0.2s', cursor: 'pointer' }} onClick={() => navigate('/leave/my-applications')}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+              <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'var(--draft)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <FileText size={20} color="white" />
+              </div>
+              <div style={{ fontWeight: 600, fontSize: '16px' }}>View My Applications</div>
+            </div>
+            <div style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+              Track the status of your submitted leave applications. See pending, approved, or rejected requests.
+            </div>
+          </div>
+
+          <div style={{ padding: '24px', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', transition: 'all 0.2s', cursor: 'pointer' }} onClick={() => navigate('/leave/calendar')}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+              <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'var(--success)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Calendar size={20} color="white" />
+              </div>
+              <div style={{ fontWeight: 600, fontSize: '16px' }}>View Team Calendar</div>
+            </div>
+            <div style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+              See which team members are on leave on specific dates. Plan your time off accordingly.
+            </div>
+          </div>
         </div>
       </div>
 
@@ -53,7 +256,7 @@ const LeaveDashboard = () => {
           {/* Balances Section */}
           <section>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
-              <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)', fontFamily: '"Playfair Display", serif' }}>My Balances</h3>
+              <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)', fontFamily: '"Playfair Display", serif' }}>My Leave Balances</h3>
             </div>
             
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
@@ -122,72 +325,80 @@ const LeaveDashboard = () => {
             </div>
           </section>
 
-          {/* Recent Applications Section - Only for non-approvers */}
-          {role !== 'approver' && (
-            <section>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
-                <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)', fontFamily: '"Playfair Display", serif' }}>Recent Applications</h3>
-                <button 
-                  onClick={() => navigate('/leave/my-applications')}
-                  style={{ background: 'none', border: 'none', color: 'var(--brand-blue)', fontSize: '13px', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
-                >
-                  View full history <ArrowRight size={14} />
-                </button>
-              </div>
-              
-              <div className="table-card" style={{ padding: '24px' }}>
-                {loading ? (
-                  <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>Loading records...</div>
-                ) : (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                    {recent.map(leave => <LeaveCard key={leave.id} leave={leave} />)}
-                    {recent.length === 0 && <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>No recent applications found.</div>}
-                  </div>
-                )}
-              </div>
-            </section>
-          )}
+          {/* Recent Applications Section */}
+          <section>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+              <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)', fontFamily: '"Playfair Display", serif' }}>Recent Applications</h3>
+              <button 
+                onClick={() => navigate('/leave/my-applications')}
+                style={{ background: 'none', border: 'none', color: 'var(--brand-blue)', fontSize: '13px', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+              >
+                View full history <ArrowRight size={14} />
+              </button>
+            </div>
+            
+            <div className="table-card" style={{ padding: '24px' }}>
+              {loading ? (
+                <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>Loading records...</div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  {recent.map(leave => <LeaveCard key={leave.id} leave={leave} />)}
+                  {recent.length === 0 && <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>No recent applications found. <button onClick={() => navigate('/leave/apply')} style={{ background: 'none', border: 'none', color: 'var(--brand-blue)', fontWeight: 600, cursor: 'pointer', marginLeft: '8px' }}>Apply now</button></div>}
+                </div>
+              )}
+            </div>
+          </section>
 
         </div>
 
         {/* SIDEBAR COLUMN */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
           
-          {/* Year to Date Widget */}
+          {/* Leave Policy Widget */}
           <div className="side-card" style={{ padding: '28px' }}>
-            <h3 style={{ fontSize: '13px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '24px', color: 'var(--text-muted)' }}>Year to Date</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-              <div style={{ background: 'rgba(39, 64, 149, 0.05)', padding: '20px', borderRadius: 'var(--radius-md)' }}>
-                <div style={{ fontSize: '32px', fontFamily: '"Playfair Display", serif', fontWeight: 700, color: 'var(--brand-blue)', lineHeight: 1 }}>{stats.total}</div>
-                <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginTop: '8px' }}>Total</div>
+            <h3 style={{ fontSize: '13px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '24px', color: 'var(--text-muted)' }}>Leave Policy</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--brand-blue)', marginTop: '6px', flexShrink: 0 }}></div>
+                <div style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                  <strong style={{ color: 'var(--text-primary)' }}>Annual Leave:</strong> 18 days/year for regular employees
+                </div>
               </div>
-              <div style={{ background: 'var(--warning-bg)', padding: '20px', borderRadius: 'var(--radius-md)' }}>
-                <div style={{ fontSize: '32px', fontFamily: '"Playfair Display", serif', fontWeight: 700, color: 'var(--warning)', lineHeight: 1 }}>{stats.pending}</div>
-                <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--warning-text)', marginTop: '8px' }}>Pending</div>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--brand-red)', marginTop: '6px', flexShrink: 0 }}></div>
+                <div style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                  <strong style={{ color: 'var(--text-primary)' }}>Sick Leave:</strong> 12 days/year with medical certificate
+                </div>
               </div>
-              <div style={{ background: 'var(--success-bg)', padding: '20px', borderRadius: 'var(--radius-md)' }}>
-                <div style={{ fontSize: '32px', fontFamily: '"Playfair Display", serif', fontWeight: 700, color: 'var(--success)', lineHeight: 1 }}>{stats.approved}</div>
-                <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--success-text)', marginTop: '8px' }}>Approved</div>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--success)', marginTop: '6px', flexShrink: 0 }}></div>
+                <div style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                  <strong style={{ color: 'var(--text-primary)' }}>Casual Leave:</strong> 6 days/year for personal matters
+                </div>
               </div>
-              <div style={{ background: 'var(--danger-bg)', padding: '20px', borderRadius: 'var(--radius-md)' }}>
-                <div style={{ fontSize: '32px', fontFamily: '"Playfair Display", serif', fontWeight: 700, color: 'var(--danger)', lineHeight: 1 }}>{stats.rejected}</div>
-                <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--danger-text)', marginTop: '8px' }}>Rejected</div>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--draft)', marginTop: '6px', flexShrink: 0 }}></div>
+                <div style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                  <strong style={{ color: 'var(--text-primary)' }}>Work from Home:</strong> Available upon manager approval
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Quick Actions Widget */}
+          {/* Tips Widget */}
           <div className="side-card" style={{ padding: '28px' }}>
-            <h3 style={{ fontSize: '13px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '24px', color: 'var(--text-muted)' }}>Quick Actions</h3>
-            <button className="btn btn-ghost" style={{ width: '100%', justifyContent: 'flex-start', marginBottom: '16px', padding: '16px', fontSize: '14px' }} onClick={() => navigate('/leave/apply')}>
-              <CalendarDays size={18} color="var(--brand-blue)" /> Request Annual Leave
-            </button>
-            <button className="btn btn-ghost" style={{ width: '100%', justifyContent: 'flex-start', marginBottom: '16px', padding: '16px', fontSize: '14px' }} onClick={() => navigate('/leave/apply')}>
-              <Stethoscope size={18} color="var(--brand-red)" /> Report Sick Leave
-            </button>
-            <button className="btn btn-ghost" style={{ width: '100%', justifyContent: 'flex-start', padding: '16px', fontSize: '14px' }} onClick={() => navigate('/leave/apply')}>
-              <Briefcase size={18} color="var(--success)" /> Other Leave Types
-            </button>
+            <h3 style={{ fontSize: '13px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '24px', color: 'var(--text-muted)' }}>Tips</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <div style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.5, padding: '12px', background: 'var(--bg-main)', borderRadius: 'var(--radius-sm)' }}>
+                Plan ahead! Submit leave requests at least 3 days in advance for planned leaves.
+              </div>
+              <div style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.5, padding: '12px', background: 'var(--bg-main)', borderRadius: 'var(--radius-sm)' }}>
+                For urgent leaves, mark priority as "Urgent" and provide clear reason.
+              </div>
+              <div style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.5, padding: '12px', background: 'var(--bg-main)', borderRadius: 'var(--radius-sm)' }}>
+                Always add handover notes to ensure smooth workflow during your absence.
+              </div>
+            </div>
           </div>
 
         </div>

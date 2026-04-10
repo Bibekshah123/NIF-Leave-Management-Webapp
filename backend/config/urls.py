@@ -6,7 +6,7 @@ from rest_framework_simplejwt.views import (
 )
 
 from leaves.views import LeaveViewSet, LeaveBalanceView, LeaveCalendarView
-from users.views import CurrentUserView, RegisterView
+from users.views import CurrentUserView, RegisterView, UserListView
 from users.token_serializers import EmailLoginView
 
 # Automated routing for ViewSets
@@ -21,6 +21,9 @@ urlpatterns = [
     path('api/v1/auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/v1/auth/register/', RegisterView.as_view(), name='token_register'),
     path('api/v1/auth/user/', CurrentUserView.as_view(), name='token_user'),
+    
+    # User list API
+    path('api/v1/users/', UserListView.as_view(), name='user-list'),
     
     # Workflow & Leaves APIs
     path('api/v1/', include(router.urls)),

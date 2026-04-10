@@ -379,6 +379,34 @@ body {
   box-shadow: 0 0 0 6px rgba(39, 64, 149, 0.08);
 }
 
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-wrapper input {
+  width: 100%;
+  padding-right: 44px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+
+.password-toggle:hover {
+  color: var(--text-primary);
+}
+
 .login-card .btn {
   width: 100%;
 }
@@ -456,20 +484,62 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 40px;
+  margin-bottom: 32px;
+  gap: 24px;
+}
+.pg-head-left {
+  flex: 1;
+}
+.pg-head-right {
+  flex-shrink: 0;
+}
+.pg-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+.pg-back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.pg-back:hover {
+  background: var(--brand-blue);
+  color: var(--white);
+  border-color: var(--brand-blue);
+}
+.pg-logo {
+  display: flex;
+  align-items: center;
+}
+.pg-logo img {
+  height: 48px;
+  width: auto;
 }
 .pg-title {
   font-family: 'Playfair Display', serif;
-  font-size: 36px;
+  font-size: 32px;
   font-weight: 700;
   color: var(--text-primary);
   letter-spacing: -0.5px;
   line-height: 1.2;
 }
 .pg-desc {
-  font-size: 16px;
+  font-size: 15px;
   color: var(--text-secondary);
-  margin-top: 8px;
+  margin-top: 6px;
   letter-spacing: -0.2px;
 }
 .pg-actions { display: flex; gap: 16px; }
@@ -1008,7 +1078,8 @@ tr.mrow:hover td { background: rgba(var(--brand-blue-rgb), 0.02); cursor: pointe
 .fsec:first-child { margin-top: 0; }
 .fgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 32px; }
 .fg { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
-.fg label { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+.fg label { font-size: 14px; font-weight: 600; color: var(--text-primary); display: flex; align-items: center; gap: 8px; }
+.fg label svg { color: var(--text-secondary); flex-shrink: 0; }
 .req { color: var(--brand-red); margin-left: 4px; }
 .fg input, .fg select, .fg textarea, .s-input {
   border: 1px solid var(--border);

@@ -29,6 +29,10 @@ const RoleLanding = () => {
     return <Navigate to="/leave/pending" replace />;
   }
 
+  if (role === 'admin') {
+    return <Navigate to="/leave/apply" replace />;
+  }
+
   return <Navigate to="/leave" replace />;
 };
 

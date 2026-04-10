@@ -1,9 +1,12 @@
 import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useLeaves } from '../../hooks/useLeaves';
 import { useAuth } from '../../hooks/useAuth';
 import Badge from '../../components/common/Badge';
+import { ArrowLeft, CheckCircle, XCircle } from 'lucide-react';
 
 const PendingApprovals = () => {
+  const navigate = useNavigate();
   const { leaves, loading, fetchLeaves, updateLeaveStatus } = useLeaves();
   const { role } = useAuth();
 
@@ -18,13 +21,26 @@ const PendingApprovals = () => {
     return (
       <div className="page">
         <div className="pg-head">
-          <div>
+          <div className="pg-head-left">
+            <div className="pg-breadcrumb">
+              <button className="pg-back" onClick={() => navigate(-1)}>
+                <ArrowLeft size={18} />
+              </button>
+              Leave Management
+            </div>
             <div className="pg-title">Access Denied</div>
             <div className="pg-desc">Only checkers and approvers may view pending leave requests.</div>
           </div>
+          <div className="pg-head-right">
+            <div className="pg-logo">
+              <img src="/NIF.png" alt="NIF Logo" />
+            </div>
+          </div>
         </div>
         <div className="empty-state">
-          <div className="empty-icon">!</div>
+          <div className="empty-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
           <div className="empty-msg">You do not have permission to view this page.</div>
         </div>
       </div>
@@ -44,9 +60,20 @@ const PendingApprovals = () => {
   return (
     <div className="page">
       <div className="pg-head">
-        <div>
+        <div className="pg-head-left">
+          <div className="pg-breadcrumb">
+            <button className="pg-back" onClick={() => navigate('/leave')}>
+              <ArrowLeft size={18} />
+            </button>
+            Leave Management
+          </div>
           <div className="pg-title">Pending Approvals</div>
           <div className="pg-desc">Review and approve team leave applications</div>
+        </div>
+        <div className="pg-head-right">
+          <div className="pg-logo">
+            <img src="/NIF.png" alt="NIF Logo" />
+          </div>
         </div>
       </div>
       
