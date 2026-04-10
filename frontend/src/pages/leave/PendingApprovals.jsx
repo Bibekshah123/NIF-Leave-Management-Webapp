@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLeaves } from '../../hooks/useLeaves';
 import { useAuth } from '../../hooks/useAuth';
@@ -9,6 +9,7 @@ const PendingApprovals = () => {
   const navigate = useNavigate();
   const { leaves, loading, fetchLeaves, updateLeaveStatus } = useLeaves();
   const { role } = useAuth();
+  const [popup, setPopup] = useState(null);
 
   useEffect(() => {
     fetchLeaves();
@@ -52,13 +53,34 @@ const PendingApprovals = () => {
   const handleAction = async (id, status) => {
     try {
       await updateLeaveStatus(id, status);
+      setPopup(status === 'approved' 
+        ? { type: 'success', title: 'Application Approved', message: `Leave request has been ${status}.` }
+        : { type: 'success', title: 'Application Rejected', message: `Leave request has been ${status}.` }
+      );
     } catch (err) {
-      alert('Action failed: ' + err.message);
+      setPopup({ type: 'error', title: 'Action Failed', message: err.message || 'Failed to update leave status' });
     }
   };
 
   return (
     <div className="page">
+      {popup && (
+        <div className="popup-overlay" onClick={() => setPopup(null)}>
+          <div className="popup-modal" onClick={e => e.stopPropagation()}>
+            <div className={`popup-icon ${popup.type === 'success' ? 'popup-success-icon' : 'popup-error-icon'}`}>
+              {popup.type === 'success' ? (
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+              )}
+            </div>
+            <h3>{popup.title}</h3>
+            <p>{popup.message}</p>
+            <button className="popup-btn" onClick={() => setPopup(null)}>OK</button>
+          </div>
+        </div>
+      )}
+
       <div className="pg-head">
         <div className="pg-head-left">
           <div className="pg-breadcrumb">

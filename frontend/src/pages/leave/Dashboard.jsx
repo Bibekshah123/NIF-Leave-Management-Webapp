@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLeaves } from '../../hooks/useLeaves';
 import { useAuth } from '../../hooks/useAuth';
@@ -8,12 +8,24 @@ import { CalendarDays, Stethoscope, Briefcase, Plane, Plus, ArrowRight, Clipboar
 const LeaveDashboard = () => {
   const navigate = useNavigate();
   const { leaves, balances, loading, fetchLeaves, fetchBalances } = useLeaves();
-  const { role } = useAuth();
+  const { role, user } = useAuth();
+  const [showWelcome, setShowWelcome] = useState(false);
+
+  useEffect(() => {
+    const justLoggedIn = localStorage.getItem('justLoggedIn');
+    if (justLoggedIn) {
+      localStorage.removeItem('justLoggedIn');
+      setShowWelcome(true);
+      setTimeout(() => setShowWelcome(false), 4000);
+    }
+  }, []);
 
   useEffect(() => {
     fetchLeaves();
-    fetchBalances();
-  }, [fetchLeaves, fetchBalances]);
+    if (role !== 'approver' && role !== 'checker') {
+      fetchBalances();
+    }
+  }, [fetchLeaves, fetchBalances, role]);
 
   const stats = {
     total: leaves.length,
@@ -32,6 +44,13 @@ const LeaveDashboard = () => {
   if (role === 'approver' || role === 'checker') {
     return (
       <div className="page" style={{ paddingBottom: '80px' }}>
+        {showWelcome && (
+          <div className="toast-notification">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <span>Login successful! Welcome, {user?.name || 'User'}</span>
+          </div>
+        )}
+
         <div className="pg-head">
           <div className="pg-head-left">
             <div className="pg-breadcrumb">Leave Management</div>
@@ -153,53 +172,22 @@ const LeaveDashboard = () => {
 
   return (
     <div className="page" style={{ paddingBottom: '80px' }}>
+      {showWelcome && (
+        <div className="toast-notification">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <span>Login successful! Welcome, {user?.name || 'User'}</span>
+        </div>
+      )}
+
       <div className="pg-head">
         <div className="pg-head-left">
-          <div className="pg-breadcrumb">Leave Management</div>
+          {/* <div className="pg-breadcrumb">Leave Management</div> */}
           <div className="pg-title">My Dashboard</div>
-          <div className="pg-desc">Manage your leave applications and track balances</div>
+          {/* <div className="pg-desc">Manage your leave applications and track balances</div> */}
         </div>
         <div className="pg-head-right">
           <div className="pg-logo">
             <img src="/NIF.png" alt="NIF Logo" />
-          </div>
-        </div>
-      </div>
-
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px', marginBottom: '32px' }}>
-        <div className="side-card" style={{ padding: '24px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'var(--warning-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Clock size={24} color="var(--warning)" />
-            </div>
-            <div>
-              <div style={{ fontSize: '28px', fontFamily: '"Playfair Display", serif', fontWeight: 700, color: 'var(--warning)', lineHeight: 1 }}>{stats.pending}</div>
-              <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)', marginTop: '4px' }}>Pending</div>
-            </div>
-          </div>
-        </div>
-
-        <div className="side-card" style={{ padding: '24px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'var(--success-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <CheckCircle size={24} color="var(--success)" />
-            </div>
-            <div>
-              <div style={{ fontSize: '28px', fontFamily: '"Playfair Display", serif', fontWeight: 700, color: 'var(--success)', lineHeight: 1 }}>{stats.approved}</div>
-              <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)', marginTop: '4px' }}>Approved</div>
-            </div>
-          </div>
-        </div>
-
-        <div className="side-card" style={{ padding: '24px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'var(--danger-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <XCircle size={24} color="var(--danger)" />
-            </div>
-            <div>
-              <div style={{ fontSize: '28px', fontFamily: '"Playfair Display", serif', fontWeight: 700, color: 'var(--danger)', lineHeight: 1 }}>{stats.rejected}</div>
-              <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)', marginTop: '4px' }}>Rejected</div>
-            </div>
           </div>
         </div>
       </div>

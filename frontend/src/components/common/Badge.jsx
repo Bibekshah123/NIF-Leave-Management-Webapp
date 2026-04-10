@@ -20,9 +20,9 @@ const Badge = ({ status }) => {
       label = 'Approved';
       break;
     case 'rejected':
-    case 'returned':
+    case 'rejected':
       className += 'ch-rejected';
-      label = 'Returned';
+      label = 'Rejected';
       break;
     default:
       className += 'ch-pending';

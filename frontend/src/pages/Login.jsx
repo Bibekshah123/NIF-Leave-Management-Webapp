@@ -71,9 +71,11 @@ const Login = () => {
 
     try {
       await login(formValues.email, formValues.password);
-      navigate(from, { replace: true });
+      localStorage.setItem('justLoggedIn', 'true');
+      showSuccess('Login successful! Redirecting...');
+      setTimeout(() => navigate(from, { replace: true }), 1000);
     } catch (err) {
-      setError(err?.response?.data?.detail || err.message || 'Login failed');
+      setError(err?.response?.data?.detail || err.message || 'Invalid credentials');
     } finally {
       setLoading(false);
     }
@@ -81,6 +83,32 @@ const Login = () => {
 
   return (
     <div className="page login-page">
+      {(error || successMessage) && (
+        <div className="popup-overlay" onClick={() => { setError(null); setSuccessMessage(''); }}>
+          <div className="popup-modal" onClick={e => e.stopPropagation()}>
+            {error && (
+              <>
+                <div className="popup-icon popup-error-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                </div>
+                <h3>Login Failed</h3>
+                <p>{error}</p>
+              </>
+            )}
+            {successMessage && (
+              <>
+                <div className="popup-icon popup-success-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                </div>
+                <h3>Welcome!</h3>
+                <p>{successMessage}</p>
+              </>
+            )}
+            <button className="popup-btn" onClick={() => { setError(null); setSuccessMessage(''); }}>OK</button>
+          </div>
+        </div>
+      )}
+
       <div className="login-grid">
         <section className="login-hero">
           <img src="/NIF.png" alt="NIF Logo" className="login-brand" />
@@ -123,9 +151,6 @@ const Login = () => {
             </div>
             <div className="login-status">Role friendly, secure access</div>
           </div>
-
-          {error && <div className="alert alert-error">{error}</div>}
-          {successMessage && <div className="alert alert-success">{successMessage}</div>}
 
           <form className="login-form" onSubmit={handleSubmit}>
             <div className="login-group">

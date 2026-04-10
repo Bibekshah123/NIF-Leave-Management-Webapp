@@ -18,19 +18,19 @@ const RoleLanding = () => {
   }
 
   if (role === 'maker') {
-    return <Navigate to="/leave/apply" replace />;
+    return <Navigate to="/leave" replace />;
   }
 
   if (role === 'checker') {
-    return <Navigate to="/leave/pending" replace />;
+    return <Navigate to="/leave" replace />;
   }
 
   if (role === 'approver') {
-    return <Navigate to="/leave/pending" replace />;
+    return <Navigate to="/leave" replace />;
   }
 
   if (role === 'admin') {
-    return <Navigate to="/leave/apply" replace />;
+    return <Navigate to="/leave" replace />;
   }
 
   return <Navigate to="/leave" replace />;
