@@ -9,7 +9,6 @@ class User(AbstractUser):
     """
     class Roles(models.TextChoices):
         MAKER = "maker", "Maker"
-        CHECKER = "checker", "Checker"
         APPROVER = "approver", "Approver"
         ADMIN = "admin", "Admin"
 

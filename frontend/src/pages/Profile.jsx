@@ -9,14 +9,12 @@ const Profile = () => {
 
   const roleLabels = {
     maker: 'Maker',
-    checker: 'Checker',
     approver: 'Approver',
     admin: 'Administrator'
   };
 
   const roleDescriptions = {
     maker: 'Can apply for leave and track applications',
-    checker: 'Can review and verify leave applications',
     approver: 'Can approve or reject leave applications',
     admin: 'Full access to all features and settings'
   };

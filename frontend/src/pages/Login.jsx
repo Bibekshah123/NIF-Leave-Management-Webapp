@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { authService } from '../services/authService';
@@ -21,6 +21,16 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const from = location.state?.from?.pathname || '/';
+  const [showLogoutSuccess, setShowLogoutSuccess] = useState(false);
+
+  useEffect(() => {
+    const justLoggedOut = localStorage.getItem('justLoggedOut');
+    if (justLoggedOut) {
+      localStorage.removeItem('justLoggedOut');
+      setShowLogoutSuccess(true);
+      setTimeout(() => setShowLogoutSuccess(false), 4000);
+    }
+  }, []);
 
   if (isAuthenticated) {
     return <Navigate to={from} replace />;
@@ -54,9 +64,12 @@ const Login = () => {
           last_name: formValues.last_name,
           password: formValues.password,
         });
+        const profile = await login(formValues.email, formValues.password);
+        localStorage.setItem('justLoggedIn', 'true');
         showSuccess('Registration successful! Signing you in...');
-        await login(formValues.email, formValues.password);
-        navigate(from, { replace: true });
+        
+        const redirectTo = profile.role === 'approver' || profile.role === 'admin' ? '/leave' : from;
+        navigate(redirectTo, { replace: true });
       } catch (err) {
         const detail = err?.response?.data || err?.response?.data?.detail;
         const message = typeof detail === 'string'
@@ -70,10 +83,12 @@ const Login = () => {
     }
 
     try {
-      await login(formValues.email, formValues.password);
+      const profile = await login(formValues.email, formValues.password);
       localStorage.setItem('justLoggedIn', 'true');
       showSuccess('Login successful! Redirecting...');
-      setTimeout(() => navigate(from, { replace: true }), 1000);
+      
+      const redirectTo = profile.role === 'approver' || profile.role === 'admin' ? '/leave' : from;
+      setTimeout(() => navigate(redirectTo, { replace: true }), 1000);
     } catch (err) {
       setError(err?.response?.data?.detail || err.message || 'Invalid credentials');
     } finally {
@@ -83,6 +98,12 @@ const Login = () => {
 
   return (
     <div className="page login-page">
+      {showLogoutSuccess && (
+        <div className="toast-notification">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <span>Logged out successfully!</span>
+        </div>
+      )}
       {(error || successMessage) && (
         <div className="popup-overlay" onClick={() => { setError(null); setSuccessMessage(''); }}>
           <div className="popup-modal" onClick={e => e.stopPropagation()}>
@@ -123,7 +144,7 @@ const Login = () => {
               <span>•</span>
               <div>
                 <strong>Role-based access</strong>
-                <p>Maker, checker, and approver interfaces are separated clearly.</p>
+                <p>Maker and approver interfaces are separated clearly.</p>
               </div>
             </div>
             <div className="feature-item">

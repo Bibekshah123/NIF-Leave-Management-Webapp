@@ -22,7 +22,7 @@ const LeaveDashboard = () => {
 
   useEffect(() => {
     fetchLeaves();
-    if (role !== 'approver' && role !== 'checker') {
+    if (role !== 'approver') {
       fetchBalances();
     }
   }, [fetchLeaves, fetchBalances, role]);
@@ -41,7 +41,7 @@ const LeaveDashboard = () => {
 
   const recent = leaves.slice(0, 4);
 
-  if (role === 'approver' || role === 'checker') {
+  if (role === 'approver' || role === 'admin') {
     return (
       <div className="page" style={{ paddingBottom: '80px' }}>
         {showWelcome && (

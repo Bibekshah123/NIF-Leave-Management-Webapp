@@ -5,8 +5,8 @@ import { useAuth } from '../../hooks/useAuth';
 const LeaveSidebar = () => {
   const { role } = useAuth();
   const canApply = role === 'maker' || role === 'admin';
-  const canReview = ['checker', 'approver', 'admin'].includes(role);
-  const canViewOwnApplications = role === 'maker' || role === 'checker' || role === 'admin';
+  const canReview = ['approver', 'admin'].includes(role);
+  const canViewOwnApplications = role === 'maker' || role === 'admin';
 
   return (
     <nav className="sidebar">

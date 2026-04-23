@@ -17,12 +17,8 @@ const RoleLanding = () => {
     return <Navigate to="/login" replace />;
   }
 
-  if (role === 'maker') {
-    return <Navigate to="/leave" replace />;
-  }
-
-  if (role === 'checker') {
-    return <Navigate to="/leave" replace />;
+if (role === 'maker') {
+    return <Navigate to="/leave" replace />
   }
 
   if (role === 'approver') {

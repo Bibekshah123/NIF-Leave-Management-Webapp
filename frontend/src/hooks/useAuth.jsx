@@ -14,7 +14,6 @@ const buildUiUser = (profile) => {
 
   const colorMap = {
     maker: '#10B981',
-    checker: '#F59E0B',
     approver: '#DC143C',
     admin: '#2563EB',
   };
