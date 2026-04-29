@@ -44,6 +44,7 @@ class Leave(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     reason = models.TextField()
+    handover_notes = models.TextField(blank=True, default='')
     
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
     approver = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="leaves_to_approve")

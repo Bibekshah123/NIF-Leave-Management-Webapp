@@ -27,10 +27,10 @@ const mapLeave = (leave) => ({
   end: leave.end_date,
   days: calculateDays(leave.start_date, leave.end_date),
   reason: leave.reason || '',
+  handover_notes: leave.handover_notes || '',
   status: leave.status,
   manager: leave.approver_name || 'Unassigned',
   applied: leave.created_at ? leave.created_at.split('T')[0] : '',
-  handover: '',
 });
 
 const toBackendPayload = (data) => ({
@@ -38,6 +38,7 @@ const toBackendPayload = (data) => ({
   start_date: data.start,
   end_date: data.end,
   reason: data.reason,
+  handover_notes: data.handover || '',
 });
 
 export const leaveService = {

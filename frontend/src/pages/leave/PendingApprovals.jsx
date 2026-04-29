@@ -123,15 +123,23 @@ const PendingApprovals = () => {
                 <div><Badge status={leave.status} /></div>
               </div>
               
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', fontSize: '13px', marginBottom: '20px'}}>
-                <div>
-                  <div style={{ fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '4px'}}>Dates</div>
-                  <div>{leave.start} to {leave.end} <span style={{ color: 'var(--text-muted)' }}>({leave.days} days)</span></div>
+              <div style={{ fontSize: '13px', marginBottom: '20px'}}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '12px'}}>
+                  <div>
+                    <div style={{ fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '4px'}}>Dates</div>
+                    <div>{leave.start} to {leave.end} <span style={{ color: 'var(--text-muted)' }}>({leave.days} days)</span></div>
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '4px'}}>Reason</div>
+                    <div>{leave.reason || '-'}</div>
+                  </div>
                 </div>
-                <div>
-                  <div style={{ fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '4px'}}>Reason</div>
-                  <div>{leave.reason}</div>
-                </div>
+                {leave.handover_notes && (
+                  <div>
+                    <div style={{ fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '4px'}}>Work Handover Notes</div>
+                    <div style={{ padding: '12px', background: 'var(--bg-main)', borderRadius: 'var(--radius-sm)', fontSize: '13px', lineHeight: 1.5 }}>{leave.handover_notes}</div>
+                  </div>
+                )}
               </div>
               
               <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', borderTop: '1px solid var(--border-light)', paddingTop: '16px'}}>

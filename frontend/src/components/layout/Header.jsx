@@ -13,6 +13,7 @@ const Header = () => {
   };
 
   return (
+    <header className="header">
 
       <div className="hd-brand">
         <div className="hd-logo">
@@ -24,7 +25,7 @@ const Header = () => {
           <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>B.S. 2082-12-18</span>
         </div>
       </div>
-      <div className="hd-right">
+      <div className="hd-right" style={{ marginLeft: 'auto' }}>
         <div className="hd-user" onClick={() => navigate('/profile')} style={{ cursor: 'pointer' }}>
           <div className="hd-av" style={{ background: user?.initials ? user.color : '#999' }}>{user?.initials || 'U'}</div>
           <div>

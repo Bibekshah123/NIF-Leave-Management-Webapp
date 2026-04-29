@@ -17,7 +17,7 @@ class LeaveSerializer(serializers.ModelSerializer):
         model = Leave
         fields = [
             'id', 'user', 'user_name', 'leave_type', 'start_date', 'end_date',
-            'reason', 'status', 'approver', 'approver_name', 'created_at'
+            'reason', 'handover_notes', 'status', 'approver', 'approver_name', 'created_at'
         ]
         read_only_fields = ['status', 'user']
 
